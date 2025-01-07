@@ -23,6 +23,7 @@ from django.urls import path
 urlpatterns = [
     path("up/", include("up.urls")),
     path("", include("pages.urls")),
+    path("ecommerce/", include("ecommerce.urls")), # Agregar el endpoint de ecommerce
     path("admin/", admin.site.urls),
 ]
 if not settings.TESTING:
