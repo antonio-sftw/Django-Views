@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+
+    <style>
+        h1 {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    {% comment %} Accede a la propiedad nombre del objeto form {% endcomment %}
+    <h1>{{ titulo }}: {{ form.instance.nombre }} </h1>
+
+    <form method="post">
+        {% comment %} Token de seguridad en Django para evitar ataques CSRF {% endcomment %}
+        {% csrf_token %}
+        {% comment %} Renderiza el formulario como párrafos {% endcomment %}
+        {{ form.as_p }}
+
+        <button type="submit">{{ button_text }}</button>
+    </form>
+
+    <a href="{% url 'products' %}">Volver a la lista de productos</a>
+</body>
+</html>

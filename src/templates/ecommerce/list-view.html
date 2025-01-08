@@ -14,15 +14,40 @@
 <body>
     <h1>{{ titulo }}</h1>
 
+    <div style="text-align: center;">
+        <p>
+            {{ request.user }}
+        </p>
+
+        {% comment %} Si la variable no existe en el contexto, se muestra el botón de crear producto {% endcomment %}
+        {% if not link_text %}
+            <!-- url es una template tag de Django que genera URLs basándose en los endpoints definidos en urls.py -->
+            <a href="{% url 'create_products' %}" style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Crear producto</a>
+        {% else %}
+            <a href="{% url 'products' %}">{{ link_text }}</a>
+        {% endif %}
+
+        <!-- Incluir el template de búsqueda -->
+        {% include "ecommerce/search.html" %}
+    </div>
+
+    {% comment %} Incluir el template de mensajes {% endcomment %}
+    {% include "ecommerce/messages.html" %}
+
     <!-- Se pasa la variable en el contexto y se itera para obtener cada elemento -->
     <ul>
-        {% for item in items %}
-            <li>{{ item.nombre }} | $ {{ item.precio }}</li>
-        {% endfor %}
+        {% if items %}
+            {% for item in items %}
+                <li>
+                    {{ item.nombre }} | $ {{ item.precio }} ---------- 
+                    <a href="{% url 'detail_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a> | 
+                    <a href="{% url 'update_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #ffc107; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Editar</a> | 
+                    <a href="{% url 'delete_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #f44336; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Eliminar</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p>No hay productos</p>
+        {% endif %}
     </ul>
-
-    {% comment %} <p>
-        {{ request.user }}
-    </p> {% endcomment %}
 </body>
 </html>

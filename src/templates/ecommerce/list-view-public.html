@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+
+    <style>
+        h1 {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ titulo }}</h1>
+
+    <!-- Incluir el template de búsqueda -->
+    {% include "ecommerce/search.html" %}
+
+    <!-- Se pasa la variable en el contexto y se itera para obtener cada elemento -->
+    <ul>
+        {% for item in items %}
+            <li>
+                {{ item.nombre }} | $ {{ item.precio }} ----------
+                <a href="{% url 'detail_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
