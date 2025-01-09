@@ -30,7 +30,9 @@ allowed_hosts = os.getenv("ALLOWED_HOSTS", ".localhost,127.0.0.1,[::1]")
 ALLOWED_HOSTS = list(map(str.strip, allowed_hosts.split(",")))
 
 # Constantes helpers globales
-LOGIN_REDIRECT_URL = "/admin/login"
+LOGIN_URL = "/admin/login/"
+TIME_ZONE = 'America/Mexico_City'
+USE_TZ = True
 
 # Application definitions
 INSTALLED_APPS = [

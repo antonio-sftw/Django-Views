@@ -10,15 +10,35 @@
             color: red;
         }
     </style>
+
+    <script>
+        function confirmDelete() {
+            if(confirm("¿Estás seguro que deseas eliminar el registro?\nEsta operación no se puede deshacer.")){
+                return true;
+            }
+            return false;
+        }
+    </script>
 </head>
 <body>
-    <h1>{{ titulo }}</h1>
-
     <!-- Se pasa la variable en el contexto -->
-    <h2>{{ items.nombre }}</h2>
-    <p>$ {{ items.precio }}</p>
+    <h1>{{ items.nombre }}</h1>
+    <h2>$ {{ items.precio }}</h2>
+    <p>{{ items.marca }}</p>
     <p>{{ items.descripcion }}</p>
+    <p>Dimensiones: {{ items.dimensiones }}</p>
+    <p>Color: {{ items.color }}</p>
+    {% if user.is_authenticated %}
+        <p>Stock: {{ items.stock }}</p>
+        <p>CB: {{ items.codigo_barras }}</p>
+        <p>{% if items.activo %}Activo{% else %}Inactivo{% endif %}</p>
+        <p>Fecha de creación: {{ items.fecha_creacion }}</p>
+        <p>Fecha de actualización: {{ items.fecha_actualizacion }}</p>
 
-    <a href="{% url 'products' %}">Volver a la lista de productos</a>
+        <a href="{% url 'update_products' items.id %}" style="display: inline-block; padding: 5px 10px; background-color: #ffc107; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Editar</a>
+        <a href="{% url 'delete_products' items.id %}" style="display: inline-block; padding: 5px 10px; background-color: #f44336; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;" onclick="return confirmDelete()">Eliminar</a>
+    {% endif %}
+
+    <a href="{% url 'products' %}" style="display: inline-block; padding: 5px 10px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px;">Volver a la lista</a>
 </body>
 </html>

@@ -38,14 +38,17 @@ def list_products(request):
     # return HttpResponse(productos)
 
     # Usando templates
+
+    # Verificar si el usuario está autenticado para mostrar el template correcto
+    # if request.user.is_authenticated:
+    #     template = "ecommerce/list-view.html"
+    # else:
+    #     template = "ecommerce/list-view-public.html"
     
     productos = Producto.objects.all()
-    
-    # Verificar si el usuario está autenticado para mostrar el template correcto
-    if request.user.is_authenticated:
-        template = "ecommerce/list-view.html"
-    else:
-        template = "ecommerce/list-view-public.html"
+
+    # Template dinámico para no usar dos templates
+    template = "ecommerce/list-view.html"
 
     # Obtener el valor del query de la URL, si no existe (no se hizo ninguna búsqueda), se asigna None
     query = request.GET.get('query' or None)
@@ -126,7 +129,7 @@ def update_products(request, product_id = None):
     context = {
         "titulo": "Actualizar Producto",
         "form": form,
-        "button_text": "Actualizar"
+        "button_text": "Editar"
     }
     
     return render(request, template, context)

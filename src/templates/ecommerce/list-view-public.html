@@ -14,8 +14,14 @@
 <body>
     <h1>{{ titulo }}</h1>
 
-    <!-- Incluir el template de búsqueda -->
-    {% include "ecommerce/search.html" %}
+    <div style="text-align: center;">
+        {% if link_text %}
+            <a href="{% url 'products' %}">{{ link_text }}</a>
+        {% endif %}
+
+        <!-- Incluir el template de búsqueda -->
+        {% include "ecommerce/search.html" %}
+    </div>
 
     <!-- Se pasa la variable en el contexto y se itera para obtener cada elemento -->
     <ul>
