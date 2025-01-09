@@ -54,7 +54,7 @@ def list_products(request):
     query = request.GET.get('query' or None)
     if query:
         # Filtrar los productos que coincidan con el valor por el nombre y/o descripción
-        productos = Producto.objects.filter(Q(nombre__icontains=query) | Q(descripcion__icontains=query))
+        productos = Producto.objects.filter(Q(nombre__icontains=query) | Q(marca__icontains=query) | Q(descripcion__icontains=query) | Q(color__icontains=query))
 
         context = {
             "titulo": "Resultados de la búsqueda",
