@@ -48,21 +48,32 @@
     {% comment %} Incluir el template de mensajes {% endcomment %}
     {% include "ecommerce/messages.html" %}
 
-    <!-- Se pasa la variable en el contexto y se itera para obtener cada elemento -->
     <ul>
-        {% if items%}
-            {% for item in items %}
-                <li>
-                    {{ item.nombre }} | $ {{ item.precio }} ---------- 
-                    <a href="{% url 'detail_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a>
-
-                    {% if user.is_authenticated %}
-                        | 
+        <!-- Se pasa la variable en el contexto y se itera para obtener cada elemento -->
+        {% if items %}
+            {% if user.is_authenticated %}
+                {% for item in items %}
+                    <li>
+                        {{ item.nombre }} | $ {{ item.precio }} ---------- 
+                        <a href="{% url 'detail_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a> | 
                         <a href="{% url 'update_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #ffc107; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Editar</a> | 
                         <a href="{% url 'delete_products' item.id %}" style="display: inline-block; padding: 5px 10px; background-color: #f44336; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;" onclick="return confirmDelete()">Eliminar</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
+                    </li>
+                {% endfor %}
+            {% else %}
+                {% if items_activos %}
+                    {% for item_activo in items_activos %}
+                        <li>
+                            {{ item_activo.nombre }} | $ {{ item_activo.precio }} ---------- 
+                        <a href="{% url 'detail_products' item_activo.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li style="list-style: none;">
+                        <p style="text-align: center;">No hay productos{% if link_text %} que coincidan con la búsqueda{% endif %}</p>
+                    </li>
+                {% endif %}
+            {% endif %}
         {% else %}
             <li style="list-style: none;">
                 <p style="text-align: center;">No hay productos{% if link_text %} que coincidan con la búsqueda{% endif %}</p>

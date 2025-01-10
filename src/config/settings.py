@@ -31,13 +31,12 @@ ALLOWED_HOSTS = list(map(str.strip, allowed_hosts.split(",")))
 
 # Constantes helpers globales
 LOGIN_URL = "/admin/login/"
-TIME_ZONE = 'America/Mexico_City'
-USE_TZ = True
 
 # Application definitions
 INSTALLED_APPS = [
     "pages.apps.PagesConfig",
     "ecommerce.apps.EcommerceConfig",  # Agregar la app de ecommerce
+    "base.apps.BaseConfig",  # Agregar la app de base
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

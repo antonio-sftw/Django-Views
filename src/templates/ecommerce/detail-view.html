@@ -21,23 +21,43 @@
     </script>
 </head>
 <body>
-    <!-- Se pasa la variable en el contexto -->
-    <h1>{{ items.nombre }}</h1>
-    <h2>$ {{ items.precio }}</h2>
-    <p>{{ items.marca }}</p>
-    <p>{{ items.descripcion }}</p>
-    <p>Dimensiones: {{ items.dimensiones }}</p>
-    <p>Color: {{ items.color }}</p>
+    {% comment %} Si el usuario está autenticado, se muestran todos los detalles del producto {% endcomment %}
     {% if user.is_authenticated %}
+        <!-- Se pasa la variable en el contexto -->
+        <h1>{{ items.nombre }}</h1>
+        <h2>$ {{ items.precio }}</h2>
+        <p>{{ items.marca }}</p>
+        <p>{{ items.descripcion }}</p>
+        <p>Dimensiones: {{ items.dimensiones }}</p>
+        <p>Color: {{ items.color }}</p>
         <p>Stock: {{ items.stock }}</p>
         <p>CB: {{ items.codigo_barras }}</p>
-        <p>{% if items.activo %}Activo{% else %}Inactivo{% endif %}</p>
+        <p>{% if items.estado %}Activo{% else %}Inactivo{% endif %}</p>
+        <p>Estado de publicación: {% if items.esta_publicado == "PUB" %}Publicado{% elif items.esta_publicado == "BOR" %}Borrador{% else %}Privado{% endif %}</p>
         <p>Fecha de creación: {{ items.fecha_creacion }}</p>
         <p>Fecha de actualización: {{ items.fecha_actualizacion }}</p>
+        <p>Fecha de publicación: {{ items.fecha_publicacion }}</p>
 
         <a href="{% url 'update_products' items.id %}" style="display: inline-block; padding: 5px 10px; background-color: #ffc107; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Editar</a>
         <a href="{% url 'delete_products' items.id %}" style="display: inline-block; padding: 5px 10px; background-color: #f44336; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;" onclick="return confirmDelete()">Eliminar</a>
+    {% else %}
+        {% comment %} Si el usuario no está autenticado, se muestran algunos detalles del producto solo si está activo {% endcomment %}
+        {% if items.estado %}
+            <h1>{{ items.nombre }}</h1>
+            <h2>$ {{ items.precio }}</h2>
+            <p>{{ items.marca }}</p>
+            <p>{{ items.descripcion }}</p>
+            <p>Dimensiones: {{ items.dimensiones }}</p>
+            <p>Color: {{ items.color }}</p>
+            <p>{% if items.stock > 0 %} Quedan {{ items.stock }} disponibles {% else %} SIN EXISTENCIAS{% endif %}</p>
+        {% else %}
+            <script>
+                window.location.href = "{% url 'products' %}";
+            </script>
+        {% endif %}
     {% endif %}
+
+
 
     <a href="{% url 'products' %}" style="display: inline-block; padding: 5px 10px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px;">Volver a la lista</a>
 </body>

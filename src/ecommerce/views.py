@@ -44,30 +44,36 @@ def list_products(request):
     #     template = "ecommerce/list-view.html"
     # else:
     #     template = "ecommerce/list-view-public.html"
-    
-    productos = Producto.objects.all()
 
     # Template dinámico para no usar dos templates
     template = "ecommerce/list-view.html"
 
     # Obtener el valor del query de la URL, si no existe (no se hizo ninguna búsqueda), se asigna None
     query = request.GET.get('query' or None)
+
     if query:
         # Filtrar los productos que coincidan con el valor por el nombre y/o descripción
         productos = Producto.objects.filter(Q(nombre__icontains=query) | Q(marca__icontains=query) | Q(descripcion__icontains=query) | Q(color__icontains=query))
 
+        activos = Producto.objects.filter(estado=True)
+
         context = {
             "titulo": "Resultados de la búsqueda",
             "items": productos,
+            "items_activos": activos,
             "link_text": "Volver a la lista"
         }
 
         return render(request, template, context)
     
+    productos = Producto.objects.all()
+    activos = Producto.objects.filter(estado=True)
+    
     # Contexto de la vista, se le pasan los datos que se van a mostrar en el template
     context = {
         "titulo": "Productos",
-        "items": productos
+        "items": productos,
+        "items_activos": activos
     }
 
     return render(request, template, context) # Renderiza el template con los datos del contexto
