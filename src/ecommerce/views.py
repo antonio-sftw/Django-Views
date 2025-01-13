@@ -54,8 +54,8 @@ def list_products(request):
     if query:
         # Filtrar los productos que coincidan con el valor por el nombre y/o descripción
         productos = Producto.objects.filter(Q(nombre__icontains=query) | Q(marca__icontains=query) | Q(descripcion__icontains=query) | Q(color__icontains=query))
-
-        activos = Producto.objects.filter(estado=True)
+        # Filtrar nuevamente para los que estén activos y publicados
+        activos = productos.filter(estado=True, estado_publicacion=Producto.EstadoPublicacionOpciones.PUBLICADO)
 
         context = {
             "titulo": "Resultados de la búsqueda",
@@ -67,7 +67,7 @@ def list_products(request):
         return render(request, template, context)
     
     productos = Producto.objects.all()
-    activos = Producto.objects.filter(estado=True)
+    activos = productos.filter(estado=True, estado_publicacion=Producto.EstadoPublicacionOpciones.PUBLICADO)
     
     # Contexto de la vista, se le pasan los datos que se van a mostrar en el template
     context = {

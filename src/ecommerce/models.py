@@ -3,6 +3,11 @@ from django.db import models
 # Create your models here.
 from .validators import validate_blocked_words # Importar función propia
 from base.models import BasePublicado # Importar clase abstracta para estado de publicación
+from django.db.models import signals # Importar el módulo signals para manejar señales
+from django.utils.text import slugify # Importar el módulo slugify para crear un slug a partir de un texto
+from django.conf import settings # Importar el módulo settings para obtener la configuración de la aplicación
+
+User = settings.AUTH_USER_MODEL # Obtener el modelo de usuario
 
 # Clase Producto que hereda de BasePublicado para tener el estado de publicación, tiene todos sus atributos y métodos
 class Producto(BasePublicado):
@@ -24,7 +29,9 @@ class Producto(BasePublicado):
     stock = models.PositiveIntegerField(default=0)
     codigo_barras = models.CharField(max_length=13, unique=True, null=True)
     estado = models.BooleanField(choices=[(True, 'Activo'), (False, 'Inactivo')], default=True)
-
+    slug = models.SlugField(null=True, blank=True, db_index=True)
+    # Relación con el modelo User, se elimina el usuario y todos los productos asociados
+    usuario = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     # Ya no se necesita, se hereda de BasePublicado
     # fecha_creacion = models.DateTimeField(auto_now_add=True)
     # fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -40,3 +47,35 @@ class Producto(BasePublicado):
         validate_blocked_words(self.nombre)
         # Manda a llamar a la función de la clase padre y guarda el registro después de la validación
         super().save(*args, **kwargs)
+
+    # Métodos
+
+    def obtener_url(self):
+        return f"/ecommerce/producto/{self.slug}"
+    
+# Esta función se ejecuta automáticamente antes de guardar un producto
+# Genera un slug único a partir del nombre del producto, está fuera del modelo
+def slug_pre_save(sender, instance, *args, **kwargs):
+    # Si el slug está vacío o es None
+    if instance.slug is None or instance.slug == "":
+        # Convierte el nombre en un slug (texto en minúsculas, sin espacios ni caracteres especiales)
+        nuevo_slug = slugify(instance.nombre)
+        
+        # Obtiene el modelo actual (Producto)
+        modelo = instance.__class__
+        
+        # Busca productos que tengan un slug que empiece igual
+        # Excluye el producto actual (para actualizaciones)
+        registros = modelo.objects.filter(slug__startswith=nuevo_slug).exclude(id=instance.id)
+        
+        # Si no hay otros productos con slug similar
+        if registros.count() == 0:
+            instance.slug = nuevo_slug
+        else:
+            # Si hay otros productos similares, añade un número al final
+            # Ejemplo: producto, producto-2, producto-3
+            instance.slug = f"{nuevo_slug}-{registros.count() + 1}"
+
+# Conecta la función al evento pre_save del modelo Producto
+# Se ejecutará automáticamente antes de guardar cualquier producto
+signals.pre_save.connect(slug_pre_save, sender=Producto)
