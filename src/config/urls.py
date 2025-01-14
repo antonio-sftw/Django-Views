@@ -15,15 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.conf import settings
-from django.contrib import admin
-from django.urls import include
-from django.urls import path
+from django.conf import settings # type: ignore
+from django.contrib import admin # type: ignore
+from django.urls import include # type: ignore
+from django.urls import path # type: ignore
 
 urlpatterns = [
     path("up/", include("up.urls")),
     path("", include("pages.urls")),
     path("ecommerce/", include("ecommerce.urls")), # Agregar el endpoint de ecommerce
+    path("categorias/", include("categorias.urls")), # Agregar el endpoint de categorías
     path("admin/", admin.site.urls),
 ]
 if not settings.TESTING:

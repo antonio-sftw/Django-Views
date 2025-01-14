@@ -1,11 +1,11 @@
-from django.db import models
+from django.db import models # type: ignore
 
 # Create your models here.
 from .validators import validate_blocked_words # Importar función propia
 from base.models import BasePublicado # Importar clase abstracta para estado de publicación
-from django.db.models import signals # Importar el módulo signals para manejar señales
-from django.utils.text import slugify # Importar el módulo slugify para crear un slug a partir de un texto
-from django.conf import settings # Importar el módulo settings para obtener la configuración de la aplicación
+from django.db.models import signals # type: ignore # Importar el módulo signals para manejar señales
+from django.utils.text import slugify # type: ignore # Importar el módulo slugify para crear un slug a partir de un texto
+from django.conf import settings # type: ignore # Importar el módulo settings para obtener la configuración de la aplicación
 
 User = settings.AUTH_USER_MODEL # Obtener el modelo de usuario
 
@@ -52,6 +52,11 @@ class Producto(BasePublicado):
 
     def obtener_url(self):
         return f"/ecommerce/producto/{self.slug}"
+
+# Clase ProductoDigital que hereda de Producto, es un proxy para Producto
+class ProductoDigital(Producto):
+    class Meta:
+        proxy = True
     
 # Esta función se ejecuta automáticamente antes de guardar un producto
 # Genera un slug único a partir del nombre del producto, está fuera del modelo

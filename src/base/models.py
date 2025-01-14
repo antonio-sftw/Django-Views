@@ -1,7 +1,7 @@
-from django.db import models
+from django.db import models # type: ignore
 
 # Create your models here.
-from django.utils import timezone # Importar timezone para obtener la fecha y hora actual
+from django.utils import timezone # type: ignore # Importar timezone para obtener la fecha y hora actual
 
 # Clase abstracta para cualquier registro que tenga estado de publicación, nunca se creará un objeto de esta clase
 class BasePublicado(models.Model):

@@ -1,4 +1,4 @@
-from django import forms
+from django import forms # type: ignore
 from .models import Producto
 
 # Clase para crear un formulario del modelo Producto

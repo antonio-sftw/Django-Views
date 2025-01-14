@@ -65,7 +65,33 @@
                     {% for item_activo in items_activos %}
                         <li>
                             {{ item_activo.nombre }} | $ {{ item_activo.precio }} ---------- 
-                        <a href="{% url 'detail_products' item_activo.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a>
+                            <a href="{% url 'detail_products' item_activo.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li style="list-style: none;">
+                        <p style="text-align: center;">No hay productos{% if link_text %} que coincidan con la búsqueda{% endif %}</p>
+                    </li>
+                {% endif %}
+            {% endif %}
+{% comment %} **************************************************************************************************************** {% endcomment %}
+        {% comment %} Si el contexto tiene el atributo object_list por ser una vista basada en clases {% endcomment %}
+        {% elif object_list %}
+            {% if user.is_authenticated %}
+                {% for obj in object_list %}
+                    <li>
+                        {{ obj.nombre }} | $ {{ obj.precio }} ---------- 
+                        <a href="{% url 'detail_products' obj.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a> | 
+                        <a href="{% url 'update_products' obj.id %}" style="display: inline-block; padding: 5px 10px; background-color: #ffc107; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Editar</a> | 
+                        <a href="{% url 'delete_products' obj.id %}" style="display: inline-block; padding: 5px 10px; background-color: #f44336; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;" onclick="return confirmDelete()">Eliminar</a>
+                    </li>
+                {% endfor %}
+            {% else %}
+                {% if object_list_activos %}
+                    {% for obj_activo in object_list_activos %}
+                        <li>
+                            {{ obj_activo.nombre }} | $ {{ obj_activo.precio }} ---------- 
+                            <a href="{% url 'detail_products' obj_activo.id %}" style="display: inline-block; padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 3px; margin: 0 5px;">Ver detalle</a>
                         </li>
                     {% endfor %}
                 {% else %}

@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 import socket
 import sys
-from distutils.util import strtobool
+from distutils.util import strtobool # type: ignore
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
@@ -36,6 +36,7 @@ LOGIN_URL = "/admin/login/"
 INSTALLED_APPS = [
     "pages.apps.PagesConfig",
     "ecommerce.apps.EcommerceConfig",  # Agregar la app de ecommerce
+    "categorias.apps.CategoriasConfig",  # Agregar la app de categorías
     "base.apps.BaseConfig",  # Agregar la app de base
     "django.contrib.admin",
     "django.contrib.auth",

@@ -1,13 +1,16 @@
 # Create your views here.
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404 # Importar la función get_object_or_404 para obtener un objeto o devolver un error 404 si no existe
+from django.http import HttpResponse # type: ignore
+from django.http import HttpResponseRedirect # type: ignore
+from django.shortcuts import render, get_object_or_404 # type: ignore # Importar la función get_object_or_404 para obtener un objeto o devolver un error 404 si no existe
 
-from django.contrib import messages # Importar el módulo messages para mostrar mensajes de éxito, error, etc.
-from django.contrib.auth.decorators import login_required # Importar el decorador para verificar si el usuario está autenticado
+from django.contrib import messages # type: ignore # Importar el módulo messages para mostrar mensajes de éxito, error, etc.
+from django.contrib.auth.decorators import login_required # type: ignore # Importar el decorador para verificar si el usuario está autenticado
 from .forms import ProductoForm # Importar el formulario ProductoForm
 from .models import Producto # Importar el modelo Producto 
-from django.db.models import Q # Importar el módulo Q para realizar consultas complejas
+from django.db.models import Q # type: ignore # Importar el módulo Q para realizar consultas complejas
+
+from .models import ProductoDigital # Importar el proxy ProductoDigital
+from django.views.generic import ListView, View, TemplateView, DetailView # type: ignore # Usando vistas basadas en clases como en categorias
 
 def home(request):
     # return HttpResponse("<h1>Hola mundo</h1>")
@@ -150,3 +153,22 @@ def delete_products(request, product_id = None):
 # Modulo importado para redireccionar a otra pagina
 def redirect_to_about(request):
     return HttpResponseRedirect("/about")
+
+# *********************************************************************************************************************************************
+
+# Vista basada en clases
+
+class DigitalProductsListView(ListView):
+     # Pasándole este atributo, django busca el template en productos/producto_list.html por la convención de nombres, como no existe porque es un proxy y aquí se usaron vistas basadas en funciones, se debe especificar el template sobre escribiendo el atributo template_name
+    model = ProductoDigital
+    template_name = "ecommerce/list-view.html"
+
+    # Sobre escribir el método get_context_data de ListView
+    def get_context_data(self, *args, **kwargs):
+        # Llamar al método de la clase padre, devuelve un diccionario con los datos y registros del modelo
+        context = super().get_context_data(*args, **kwargs)
+        activos = ProductoDigital.objects.filter(estado=True, estado_publicacion=ProductoDigital.EstadoPublicacionOpciones.PUBLICADO)
+        # Añadir un atributo al contexto
+        context["titulo"] = "Productos Digitales"
+        context["object_list_activos"] = activos
+        return context

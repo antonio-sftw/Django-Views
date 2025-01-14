@@ -1,8 +1,8 @@
 import os
 
-from django import get_version
-from django.conf import settings
-from django.shortcuts import render
+from django import get_version # type: ignore
+from django.conf import settings # type: ignore
+from django.shortcuts import render # type: ignore
 
 
 def home(request):
